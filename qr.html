@@ -1,64 +1,82 @@
 <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>Personal Details QR Code Generator</title>
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-       <style>
-           body {
-               font-family: Arial, sans-serif;
-               max-width: 800px;
-               margin: 0 auto;
-               padding: 20px;
-           }
-           form {
-               display: flex;
-               flex-direction: column;
-               gap: 10px;
-           }
-           input {
-               padding: 5px;
-           }
-           #qrcode {
-               margin-top: 20px;
-           }
-           #qrUrl {
-               word-break: break-all;
-               margin-top: 20px;
-           }
-       </style>
-   </head>
-   <body>
-       <h1>Personal Details QR Code Generator</h1>
-       <form id="personalDetailsForm">
-           <input type="text" id="name" placeholder="Name" required>
-           <input type="email" id="email" placeholder="Email" required>
-           <input type="tel" id="phone" placeholder="Phone">
-           <input type="text" id="address" placeholder="Address">
-           <button type="submit">Generate QR Code</button>
-       </form>
-       <div id="qrcode"></div>
-       <p id="qrUrl"></p>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Details QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input {
+            padding: 5px;
+        }
+        #qrcode {
+            margin-top: 20px;
+        }
+        #qrUrl, #warning {
+            word-break: break-all;
+            margin-top: 20px;
+        }
+        .warning {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Personal Details QR Code Generator</h1>
+    <form id="personalDetailsForm">
+        <input type="text" id="name" placeholder="Name" required maxlength="50">
+        <input type="email" id="email" placeholder="Email" required maxlength="50">
+        <input type="tel" id="phone" placeholder="Phone" maxlength="20">
+        <input type="text" id="address" placeholder="Address" maxlength="100">
+        <button type="submit">Generate QR Code</button>
+    </form>
+    <div id="qrcode"></div>
+    <p id="qrUrl"></p>
+    <p id="warning" class="warning"></p>
 
-       <script>
-           document.getElementById('personalDetailsForm').addEventListener('submit', function(e) {
-               e.preventDefault();
-               
-               const name = document.getElementById('name').value;
-               const email = document.getElementById('email').value;
-               const phone = document.getElementById('phone').value;
-               const address = document.getElementById('address').value;
-               
-               const data = JSON.stringify({name, email, phone, address});
-               const url = `${window.location.href.split('?')[0].replace(/\/[^\/]*$/, '/display.html')}?data=${encodeURIComponent(data)}`;
-               
-               document.getElementById('qrcode').innerHTML = ''; // Clear previous QR code
-               new QRCode(document.getElementById("qrcode"), url);
-               
-               document.getElementById('qrUrl').textContent = `QR Code URL: ${url}`;
-               console.log('Generated URL:', url); // For debugging
-           });
-       </script>
-   </body>
-   </html>
+    <script>
+        document.getElementById('personalDetailsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            
+            const data = JSON.stringify({name, email, phone, address});
+            const warningElement = document.getElementById('warning');
+            
+            if (data.length > 500) {
+                warningElement.textContent = 'Warning: Data is too long. Please shorten the address or other fields.';
+                return;
+            }
+            
+            warningElement.textContent = '';
+            
+            const url = `${window.location.href.split('?')[0].replace(/\/[^\/]*$/, '/display.html')}?data=${encodeURIComponent(data)}`;
+            
+            document.getElementById('qrcode').innerHTML = ''; // Clear previous QR code
+            new QRCode(document.getElementById("qrcode"), {
+                text: url,
+                width: 256,
+                height: 256,
+                correctLevel: QRCode.CorrectLevel.L
+            });
+            
+            document.getElementById('qrUrl').textContent = `QR Code URL: ${url}`;
+            console.log('Generated URL:', url); // For debugging
+        });
+    </script>
+</body>
+</html>
