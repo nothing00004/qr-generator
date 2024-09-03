@@ -3,62 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Details QR Code Generator</title>
+    <title>Generate QR - Personal Details</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        body {
+        html {
+            height: 100%;
+            margin: 0;
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://static.vecteezy.com/system/resources/previews/008/311/935/non_2x/the-illustration-graphic-consists-of-abstract-background-with-a-blue-gradient-dynamic-shapes-composition-eps10-perfect-for-presentation-background-website-landing-page-wallpaper-vector.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
         }
         form {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
         }
         input {
-            padding: 5px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
         #qrcode {
             margin-top: 20px;
+            text-align: center;
         }
         #qrUrl, #warning {
             word-break: break-all;
             margin-top: 20px;
+            text-align: center;
         }
         .warning {
-            color: red;
+            color: #dc3545;
         }
     </style>
 </head>
 <body>
-    <h1>Personal Details QR Code Generator</h1>
-    <form id="personalDetailsForm">
-        <input type="text" id="name" placeholder="Name" required maxlength="50">
-        <input type="email" id="email" placeholder="Email" required maxlength="50">
-        <input type="tel" id="phone" placeholder="Phone" maxlength="20">
-        <input type="text" id="address" placeholder="Address" maxlength="100">
-        <button type="submit">Generate QR Code</button>
-    </form>
-    <div id="qrcode"></div>
-    <p id="qrUrl"></p>
-    <p id="warning" class="warning"></p>
+    <div class="card">
+        <h1>Generate QR</h1>
+        <form id="personalDetailsForm">
+            <input type="text" id="name" placeholder="Name" required maxlength="50">
+            <input type="tel" id="phone" placeholder="Mobile Number" maxlength="20">
+            <input type="email" id="email" placeholder="Email" required maxlength="50">
+            <input type="text" id="address" placeholder="Address" maxlength="150">
+            <button type="submit">Generate</button>
+        </form>
+        <div id="qrcode"></div>
+        <p id="qrUrl"></p>
+        <p id="warning" class="warning"></p>
+    </div>
 
     <script>
         document.getElementById('personalDetailsForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
             const address = document.getElementById('address').value.trim();
             
             const data = JSON.stringify({name, email, phone, address});
             const warningElement = document.getElementById('warning');
             
             if (data.length > 500) {
-                warningElement.textContent = 'Warning: Data is too long. Please shorten the address or other fields.';
+                warningElement.textContent = 'Warning: Data is too long. Please shorten your inputs.';
                 return;
             }
             
@@ -69,8 +107,8 @@
             document.getElementById('qrcode').innerHTML = ''; // Clear previous QR code
             new QRCode(document.getElementById("qrcode"), {
                 text: url,
-                width: 256,
-                height: 256,
+                width: 200,
+                height: 200,
                 correctLevel: QRCode.CorrectLevel.L
             });
             
@@ -79,4 +117,5 @@
         });
     </script>
 </body>
+<a id="end">Copyright © 2024, Aniplay. All Rights Reserved</a>
 </html>
